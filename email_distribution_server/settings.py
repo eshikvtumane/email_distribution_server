@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'email_distribution.apps.EmailDistributionConfig',
+    'emails',
 ]
 
 MIDDLEWARE = [
