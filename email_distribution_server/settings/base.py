@@ -27,6 +27,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'email_distribution.apps.EmailDistributionConfig',
     'emails',
+    'django_celery_beat',
+    'api',
+    'rest_framework',
+    'rest_framework_swagger',
 ]
 
 MIDDLEWARE = [

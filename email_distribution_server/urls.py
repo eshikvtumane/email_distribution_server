@@ -13,9 +13,28 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
+from rest_framework import routers
+from rest_framework_swagger.views import get_swagger_view
+
+from api import views
+
+router = routers.DefaultRouter()
+router.register(r'emails', views.EmailViewSet)
+router.register(r'groups-emails', views.GroupEmailViewSet)
+router.register(r'periodic-tasks', views.PeriodicTaskViewSet)
+
+schema_view = get_swagger_view(title='API')
 
 urlpatterns = [
+    url(r'^', include(router.urls)),
     url(r'^admin/', admin.site.urls),
+    url(r'^swagger/', schema_view),
+    # provide a login-link in the browsable api
+    url(r'^api/ui-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+
+    # base for the browsable- the rest-api
+    # url(r'^api/', include(router.urls)),
 ]
