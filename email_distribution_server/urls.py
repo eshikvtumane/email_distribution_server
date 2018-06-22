@@ -19,6 +19,7 @@ from rest_framework import routers
 from rest_framework_swagger.views import get_swagger_view
 
 from api import views
+from emails.views import unsubscribe
 
 router = routers.DefaultRouter()
 router.register(r'emails', views.EmailViewSet)
@@ -31,10 +32,5 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^admin/', admin.site.urls),
     url(r'^swagger/', schema_view),
-    # provide a login-link in the browsable api
-    url(r'^api/ui-auth/', include('rest_framework.urls', namespace='rest_framework')),
-
-
-    # base for the browsable- the rest-api
-    # url(r'^api/', include(router.urls)),
+    url(r'^email/unsubscribe/(?P<hash>[a-z0-9\-]+)/', unsubscribe, name='unsubscribe'),
 ]

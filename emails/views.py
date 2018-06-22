@@ -1,3 +1,16 @@
+from django.http import Http404
 from django.shortcuts import render
 
-# Create your views here.
+from emails.submodels.email import Email
+
+
+def unsubscribe(request, hash):
+    try:
+        email = Email.objects.get(verification_hash=hash)
+    except Email.DoesNotExist:
+        raise Http404("Email does not exist")
+
+    email.subscription = False
+    email.save()
+
+    return render(request, 'unsubscribe.html')
