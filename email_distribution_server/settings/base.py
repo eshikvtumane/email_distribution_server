@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'api',
     'rest_framework',
     'rest_framework_swagger',
+    'logger',
 ]
 
 MIDDLEWARE = [
