@@ -17,18 +17,23 @@ class GroupEmailSerializer(serializers.ModelSerializer):
 
 
 class EmailSerializer(serializers.ModelSerializer):
+    id = serializers.ModelField(model_field=Email()._meta.get_field('id'), read_only=True)
+
     class Meta:
         model = Email
         fields = '__all__'
 
 
 class IntervalScheduleSerializer(serializers.ModelSerializer):
+    id = serializers.ModelField(model_field=IntervalSchedule()._meta.get_field('id'), read_only=True)
+
     class Meta:
         model = IntervalSchedule
         fields = '__all__'
 
 
 class PeriodicTaskSerializer(serializers.ModelSerializer):
+    id = serializers.ModelField(model_field=PeriodicTask()._meta.get_field('id'), read_only=True)
     interval = IntervalScheduleSerializer()
     group_emails = serializers.IntegerField(required=False, write_only=True)
     kwargs = serializers.ModelField(model_field=PeriodicTask()._meta.get_field('kwargs'), read_only=True)
@@ -37,6 +42,7 @@ class PeriodicTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = PeriodicTask
         fields = [
+            'id',
             'name',
             'task',
             'interval',
