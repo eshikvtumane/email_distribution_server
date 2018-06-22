@@ -9,6 +9,7 @@ from django.core.mail import get_connection, EmailMultiAlternatives
 from email_distribution_server.celery import app
 from emails.submodels.email import Email
 from emails.submodels.group_email import GroupEmail
+from logger.models import EmailSenderLogger, Status
 
 
 class EmailsSender:
@@ -83,6 +84,7 @@ class EmailsSender:
 def send_emails(*args, **kwargs):
     group_emails_id = kwargs.pop('group_emails', None)
     email_body = "Follow this link to unsubscribe: <a href='http://localhost:8000{{unsubscribe_url}}'>http://localhost:8000{{unsubscribe_url}}</a>"
+    logger = EmailSenderLogger(message=email_body)
 
     try:
         emails_sender = EmailsSender()
@@ -90,7 +92,11 @@ def send_emails(*args, **kwargs):
                                                                     settings.EMAIL_HOST_USER)
         quantity_total_emails = emails_sender.get_all_select_emails_quantity()
         print('All: %s, Sended: %s' % (quantity_total_emails, quantity_sended_emails))
-
+        logger.result = Status.SUCCESS.name
     except:
         error = traceback.format_exc()
         print(error)
+        logger.result = Status.FAILURE.name
+        logger.error = error
+
+    logger.save()
