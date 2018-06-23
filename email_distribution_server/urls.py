@@ -15,21 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from rest_framework import routers
+
 from rest_framework_swagger.views import get_swagger_view
 
-from api import views
 from emails.views import unsubscribe
 
-router = routers.DefaultRouter()
-router.register(r'emails', views.EmailViewSet)
-router.register(r'groups-emails', views.GroupEmailViewSet)
-router.register(r'periodic-tasks', views.PeriodicTaskViewSet)
 
 schema_view = get_swagger_view(title='API')
 
 urlpatterns = [
-    url(r'^', include(router.urls)),
+    url(r'^api/', include('api.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^swagger/', schema_view),
     url(r'^email/unsubscribe/(?P<hash>[a-z0-9\-]+)/', unsubscribe, name='unsubscribe'),
