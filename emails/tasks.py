@@ -2,6 +2,7 @@ import traceback
 
 from django.conf import settings
 from django.core.mail import send_mass_mail
+from django.db.models import QuerySet
 from django.template import Template, Context
 from django.urls import reverse
 from django.core.mail import get_connection, EmailMultiAlternatives
@@ -13,6 +14,10 @@ from logger.models import EmailSenderLogger, Status
 
 
 class EmailsSender:
+    def __init__(self):
+        self._emails_info = []
+        self._mails = []
+
     def send_emails_by_group(self, group_emails_id, subject, body, sender_address):
         self._get_subscribe_emails_info_by_group(group_emails_id)
         self._create_emails_list(subject, body, sender_address)
@@ -20,9 +25,12 @@ class EmailsSender:
         return result
 
     def _get_subscribe_emails_info_by_group(self, group_emails_id):
-        group_emails = GroupEmail.objects.get(id=group_emails_id)
+        try:
+            group_emails = GroupEmail.objects.get(id=group_emails_id)
+        except:
+            raise Exception('Group emails id not exist in DB.')
+
         self._emails_info = Email.objects.filter(group=group_emails, subscription=True)
-        # return emails_info
 
     def _create_emails_list(self, subject, body, sender_address):
         """
@@ -33,7 +41,7 @@ class EmailsSender:
         :param sender_address:
         :return: list with tuples emails info
         """
-        self._mails = []
+
         template_body = Template(body)
         for email in self._emails_info:
             context = Context({'unsubscribe_url': reverse('unsubscribe', kwargs={'hash': str(email.verification_hash)})})
@@ -74,14 +82,14 @@ class EmailsSender:
         return connection.send_messages(messages)
 
     def get_all_select_emails_quantity(self):
-        if hasattr(self, '_emails_info'):
+        if isinstance(self._emails_info, QuerySet):
             return self._emails_info.count()
 
-        raise Exception('Attribute _emails_info not exist')
+        raise Exception('Call method "get_all_select_emails_quantity" after method "send_emails_by_group"')
 
 
 @app.task
-def send_emails(*args, **kwargs):
+def send_emails_task(*args, **kwargs):
     group_emails_id = kwargs.pop('group_emails', None)
     email_body = "Follow this link to unsubscribe: <a href='http://localhost:8000{{unsubscribe_url}}'>http://localhost:8000{{unsubscribe_url}}</a>"
     logger = EmailSenderLogger(message=email_body)
