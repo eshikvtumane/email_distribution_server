@@ -66,11 +66,11 @@ class PeriodicTaskSerializer(serializers.ModelSerializer):
 
         try:
             with transaction.atomic():
-                interval = self._get_value_by_key(validated_data, interval_key, 'Interval parameter empty')
-                interval_obj = IntervalSchedule.objects.create(**interval)
+                interval = self._get_value_by_key_or_exception(validated_data, interval_key, 'Interval parameter empty')
+                interval_obj = self._create_interval_schedule(interval)
                 validated_data[interval_key] = interval_obj
 
-                group_emails = self._get_value_by_key(validated_data, group_emails_key, 'Group emails parameter empty')
+                group_emails = self._get_value_by_key_or_exception(validated_data, group_emails_key, 'Group emails parameter empty')
                 validated_data[kwargs_key] = json.dumps({group_emails_key: group_emails})
                 self._remove_value_from_dict_by_key(group_emails_key, validated_data)
 
@@ -81,11 +81,22 @@ class PeriodicTaskSerializer(serializers.ModelSerializer):
             raise APIException(str(e))
 
 
-    def _get_value_by_key(self, data_dict, key, exception_error):
+    def _get_value_by_key_or_exception(self, data_dict, key, exception_error):
         value = data_dict.get(key, None)
         if value is None:
             raise APIException(exception_error)
         return value
+
+    def _create_interval_schedule(self, params):
+        if 'every' not in params:
+            raise APIException('Not parameter "every" in request.')
+        if 'period' not in params:
+            raise APIException('Not parameter "period" in request.')
+
+        try:
+            return IntervalSchedule.objects.create(**params)
+        except:
+            raise APIException('Error with connect to DB')
 
     def _remove_value_from_dict_by_key(self, key, data_dict):
         data_dict.pop(key, None)
