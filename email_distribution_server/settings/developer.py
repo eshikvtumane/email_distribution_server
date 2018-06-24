@@ -6,7 +6,7 @@ SECRET_KEY = '+5)%qf)z4475va96o%$ek5yo_*lyd9dc%6e35u&4h_l)@dm%m8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['testserver', '127.0.0.1']
+ALLOWED_HOSTS = ['testserver', '127.0.0.1', 'localhost']
 
 
 # Database
