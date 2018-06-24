@@ -10,7 +10,7 @@ def create_hash():
 
 class Email(models.Model):
 
-    email = EmailField()
+    email = EmailField(unique=True)
     group = ForeignKey('emails.GroupEmail')
 
     verification_hash = models.CharField(max_length=32, default=create_hash, unique=True)
