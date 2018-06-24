@@ -71,6 +71,7 @@ class PeriodicTaskSerializer(serializers.ModelSerializer):
                 validated_data[interval_key] = interval_obj
 
                 group_emails = self._get_value_by_key_or_exception(validated_data, group_emails_key, 'Group emails parameter empty')
+                self._check_values_in_db(GroupEmail, 'Group with current id not exist', **{'id': group_emails})
                 validated_data[kwargs_key] = json.dumps({group_emails_key: group_emails})
                 self._remove_value_from_dict_by_key(group_emails_key, validated_data)
 
@@ -88,11 +89,6 @@ class PeriodicTaskSerializer(serializers.ModelSerializer):
         return value
 
     def _create_interval_schedule(self, params):
-        if 'every' not in params:
-            raise APIException('Not parameter "every" in request.')
-        if 'period' not in params:
-            raise APIException('Not parameter "period" in request.')
-
         try:
             return IntervalSchedule.objects.create(**params)
         except:
@@ -100,6 +96,12 @@ class PeriodicTaskSerializer(serializers.ModelSerializer):
 
     def _remove_value_from_dict_by_key(self, key, data_dict):
         data_dict.pop(key, None)
+
+    def _check_values_in_db(self, model, error_message, **kwargs):
+        try:
+            model.objects.get(**kwargs)
+        except:
+            raise APIException(error_message)
 
     def to_representation(self, instance):
         """
