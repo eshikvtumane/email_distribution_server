@@ -23,12 +23,16 @@ class BaseTest:
         url = parse.urljoin(*args) + '/'
         return url
 
-    def get(self, url, format='json'):
+    def get(self, id=None, format='json'):
+        url = self.url_client
+        if id is not None:
+            url = self.url_join(self.url_client, id)
         return self.api_client.get(url, format=format)
 
-    def post(self, url, data={}, format='json'):
-        return self.api_client.post(url, data, format='json')
+    def post(self, data={}, format='json'):
+        return self.api_client.post(self.url_client, data, format=format)
 
-    def delete(self, url):
+    def delete(self, id):
+        url = self.url_join(self.url_client, id)
         return self.api_client.delete(url)
 
