@@ -100,11 +100,11 @@ def send_emails_task(*args, **kwargs):
                                                                     settings.EMAIL_HOST_USER)
         quantity_total_emails = emails_sender.get_all_select_emails_quantity()
         print('All: %s, Sended: %s' % (quantity_total_emails, quantity_sended_emails))
-        logger.result = Status.SUCCESS.name
+        logger.status = Status.SUCCESS.name
     except:
         error = traceback.format_exc()
         print(error)
-        logger.result = Status.FAILURE.name
+        logger.status = Status.FAILURE.name
         logger.error = error
 
     logger.save()

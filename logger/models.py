@@ -16,5 +16,5 @@ class Status(Enum):
 class EmailSenderLogger(models.Model):
     message = fields.TextField()
     error = fields.TextField()
-    status = fields.CharField(max_length=255, choices=Status.choices(), default=Status.SUCCESS.name)
+    status = fields.CharField(max_length=255, choices=Status.choices())
     datetime_end = fields.DateTimeField(auto_now_add=True)
