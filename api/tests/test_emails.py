@@ -112,3 +112,20 @@ def test_delete_email(api_client, emails, url_client):
     result_get = response_get.json()
     assert ('detail' in result_get) == True
     assert (result_get['detail'] == 'Not found.') == True
+
+
+def test_create_exist_email(api_client, emails, url_client):
+    email = emails[0].email
+
+    data = {
+        "email": email,
+        "subscription": True,
+        "group": 1
+    }
+
+    response_post = post_email(api_client, emails, url_client, data)
+    result_post = response_post.json()
+
+    assert ('email' in result_post) == True
+    assert (len(result_post) != 0) == True
+    assert (result_post['email'][0] == 'email with this email already exists.') == True
