@@ -23,5 +23,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(create_emails_group)
+        # migrations.RunPython(create_emails_group)
     ]
