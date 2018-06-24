@@ -1,11 +1,5 @@
 from helpers.testing.base_function_for_testing_api import *
 
-
-@pytest.fixture
-def url_client():
-    return '/api/groups-emails/'
-
-
 @pytest.fixture
 def groups_emails(db):
     return mixer.cycle(5).blend('emails.GroupEmail')
