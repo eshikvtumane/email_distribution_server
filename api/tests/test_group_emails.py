@@ -7,11 +7,11 @@ def groups_emails(db):
 class TestGroupsEmails(BaseTest):
     url_client = '/api/groups-emails/'
 
-    def get_group_by_id(self, email_id):
-        return self.get(self.url_join(self.url_client, email_id))
+    def get_group_by_id(self, group_id):
+        return self.get(group_id)
 
     def test_get_group_emails_list(self, groups_emails):
-        response = self.api_client.get(self.url_client, format='json')
+        response = self.get()
         result_get = response.json()
         assert len(result_get) == len(groups_emails)
 
@@ -26,11 +26,11 @@ class TestGroupsEmails(BaseTest):
             'name': 'GroupTest'
         }
 
-        response_post = self.post(self.url_client, data)
+        response_post = self.post(data)
         result_post = response_post.data
         assert ('id' in result_post) == True
 
-        response_get = self.get(self.url_join(self.url_client, result_post['id']))
+        response_get = self.get(result_post['id'])
         result_get = response_get.data
         assert result_get['id'] == result_post['id']
 
@@ -44,10 +44,10 @@ class TestGroupsEmails(BaseTest):
         assert (result_get['id'] == email.id) == True
 
         # delete email
-        response_delete = self.delete(self.url_join(self.url_client, result_get['id']))
+        response_delete = self.delete(result_get['id'])
         assert response_delete.status_code == 204
 
-        # check dosn't exist email
+        # check doesn't exist email
         response_get = self.get_group_by_id(email.id)
         result_get = response_get.json()
         assert ('detail' in result_get) == True
