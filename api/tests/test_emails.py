@@ -2,27 +2,12 @@ import re
 import typing.re
 from urllib import parse
 
-from mixer.backend.django import mixer
-from rest_framework.test import APIClient
-import pytest
-
-from helpers.testing.locale_fixture import *
-
+from helpers.testing.base_function_for_testing_api import *
 
 
 @pytest.fixture
 def url_client():
     return '/api/emails/'
-
-
-@pytest.fixture
-def api_client():
-    return APIClient()
-
-
-@pytest.fixture
-def api_client():
-    return APIClient()
 
 
 @pytest.fixture
