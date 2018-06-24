@@ -35,8 +35,8 @@ def email(db):
     return mixer.blend('emails.Email')
 
 
-def get_email_by_id(api_client, url, id):
-    url = parse.urljoin(url, '%s/' % id)
+def get_email_by_id(api_client, url, email_id):
+    url = parse.urljoin(url, '%s/' % email_id)
     return api_client.get(url)
 
 
@@ -47,9 +47,10 @@ def test_get_emails_list(api_client, emails, url_client):
 
 
 def test_get_email_by_id(api_client, emails, url_client):
-    response = get_email_by_id(api_client, url_client, 1)
+    email = emails[0]
+    response = get_email_by_id(api_client, url_client, email.id)
     result = response.data
-    assert result['id'] == 1
+    assert result['id'] == email.id
 
 
 def post_email(api_client, emails, url_client, data):
