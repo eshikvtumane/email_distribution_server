@@ -6,12 +6,8 @@ from mixer.backend.django import mixer
 from rest_framework.test import APIClient
 import pytest
 
-from django.utils.translation import activate
+from helpers.testing.locale_fixture import *
 
-
-@pytest.fixture(autouse=True)
-def set_default_language():
-    activate('en')
 
 
 @pytest.fixture
