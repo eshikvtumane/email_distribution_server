@@ -16,7 +16,7 @@ Django 1.11.13
 	
  - Административная панель: /admin
 	
- - Отписка от рассылки: /email/unsubscribe/{verification_hash}
+ - Отписка от рассылки: /email/unsubscribe/{verification_hash} (verification_hash можно посмотреть в административной панели)
 
 Данные для входа в административную панель:
 
