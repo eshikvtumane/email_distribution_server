@@ -17,12 +17,43 @@ SQLite
 	
  - Административная панель: /admin
 	
- - Отписка от рассылки: /email/unsubscribe/{verification_hash} (verification_hash можно посмотреть в административной панели)
+ - Отписка от рассылки: /email/unsubscribe/{verification_hash} (verification_hash можно посмотреть в административной
+ панели, модель Email)
 
 Данные для входа в административную панель:
 
  - Логин: admin
  - Пароль: adminadmin
+
+Формат json для добавления группы рассылки через API (/api/emails/):
+```
+{
+  "name": "string"
+}
+```
+
+Формат json для добавления электронной почты (подписка(boolean), группа подписки(id)) через API(/api/groups-emails/):
+```
+{
+  "email": "string",
+  "subscription": true,
+  "group": 0
+}
+```
+
+Формат json для добавления задачи через API(/api/periodic-tasks/):
+```
+{
+   "name":  "string",
+   "interval":  {
+	   "every": 10,
+	   "period": "minutes"
+   },
+   "enabled":  true,
+   "group_emails":  0
+}
+```
+Типы значений для аттрибута period: days, hours, minutes, seconds, microseconds.
 
 Папка с тестами: /api/tests  
 Команда для выполнения (нужно перейти в папку с проектом): py.test
